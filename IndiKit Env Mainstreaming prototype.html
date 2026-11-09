@@ -127,6 +127,16 @@ function ResMenu(){
   const L=[["Sample Size and Margin of Error Calculator","IndiKit Calculator prototype.html"],["Rapid Guides and Checklists","IndiKit Resources prototype.html"],["Webinar Recordings","IndiKit Webinars prototype.html"],["Additional Indicator Resources","IndiKit Links prototype.html"],["IndiKit Promo Materials","IndiKit Promo prototype.html"]];
   return <div style={{position:"absolute",top:"100%",left:-20,width:340,background:"#fff",borderTop:`3px solid ${O}`,boxShadow:"0 0 0 1px "+RULE+", 0 10px 28px rgba(22,37,63,.18)",zIndex:20}}>{L.map(([l,u],i)=><a key={l} href={u} className="ik-dd" style={i?it:{...it,borderTop:0}}>{l}</a>)}</div>;
 }
+function Lang(){
+  const [o,setO]=React.useState(false);
+  const L=[["Français","fr"],["Português","pt"],["Español","es"],["العربية","ar"],["Українська","uk"],["Bahasa Indonesia","id"],["Italiano","it"],["Deutsch","de"]];
+  return (
+    <div style={{position:"relative"}} onBlur={e=>{if(!e.currentTarget.contains(e.relatedTarget))setO(false)}} onKeyDown={e=>{if(e.key==="Escape")setO(false)}}>
+      <button aria-label="Language: English" aria-expanded={o} aria-haspopup="true" onClick={()=>setO(!o)} style={{background:"#fff",color:"#1A1A1A",height:38,padding:"0 12px",display:"flex",alignItems:"center",gap:10,fontSize:15,border:0,cursor:"pointer",fontFamily:"inherit",minWidth:150,justifyContent:"space-between"}}>English <Chev/></button>
+      {o&&<ul style={{position:"absolute",top:"100%",right:0,minWidth:"100%",listStyle:"none",margin:0,padding:0,background:"#fff",boxShadow:"0 0 0 1px "+RULE+", 0 10px 28px rgba(22,37,63,.18)",zIndex:20}}>{L.map(([l,c])=><li key={c}><button lang={c} dir={c==="ar"?"rtl":undefined} className="ik-dd" onClick={()=>setO(false)} style={{display:"block",width:"100%",textAlign:"left",padding:"12px 16px",background:"#fff",border:0,borderTop:"1px solid "+RULE,font:"inherit",fontSize:16,color:"#1A1A1A",cursor:"pointer",whiteSpace:"nowrap"}}>{l}</button></li>)}</ul>}
+    </div>
+  );
+}
 function Header({open=false,about=false,active}){
   const [rs,setRs]=React.useState(false);
   const [h,setH]=React.useState(false);
@@ -143,7 +153,7 @@ function Header({open=false,about=false,active}){
       </nav>
       <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:18}}>
         <button data-na aria-label="Search" style={{background:"none",border:0,padding:6,cursor:"pointer",display:"flex"}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
-        <button data-na aria-label="Language switch" style={{background:"#fff",color:"#1A1A1A",height:38,padding:"0 12px",display:"flex",alignItems:"center",gap:10,fontSize:15,border:0,cursor:"pointer",fontFamily:"inherit"}}>English <Chev/></button>
+        <Lang/>
       </div>
     </header>
   );
@@ -282,7 +292,7 @@ function NutritionPage(){
         <Crumbs items={[["Home","IndiKit HP prototype.html"],["Environmental Mainstreaming"]]}/>
         <div className="ik-grid" style={{display:"grid",gridTemplateColumns:"280px minmax(0,1fr)"}}><Sidebar/><div style={{minWidth:0}}>
         <section style={{padding:"36px 30px 32px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:10}}><img src={ico(24,1017)} alt="" style={{width:52,height:52}}/><h1 style={{fontWeight:700,color:"#1A1A1A",fontSize:44,lineHeight:1.15,margin:0}}>Environmental Mainstreaming</h1></div>
+          <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:10}}><img src={ico(24,1017)} alt="" style={{width:52,height:52}}/><h1 style={{fontWeight:700,color:"#1A1A1A",fontSize:40,lineHeight:1.15,margin:0}}>Environmental Mainstreaming</h1></div>
           <p className="ik-p" style={{maxWidth:760}}>Indicators that help you measure how well an organisation or a project <em>mainstreams</em> environmental protection. Looking for indicators to measure the results of environmental projects? See <a href="#">Environment</a>.</p>
         </section>
         <section style={{padding:"28px 30px",background:"#E9EEF6"}}>
@@ -294,7 +304,7 @@ function NutritionPage(){
           <div style={{padding:"16px 18px",border:"1px solid "+RULE,background:"#FAF9F7",marginBottom:16}}>
             <div style={{fontSize:16,fontWeight:500,marginBottom:12}}>Refine by</div>
             <div style={{display:"flex",gap:"16px 40px",flexWrap:"wrap",alignItems:"flex-start"}}>
-            <Facet k="l" label="Logframe level" arr={lv} set={setLv} opts={[["Output",i=>i.lvs.includes("Output")],["Outcome",i=>i.lvs.includes("Outcome")],["Impact",i=>i.lvs.includes("Impact")],["Process",i=>i.lvs.includes("Process")]]}/>
+            <Facet k="l" label="Typical logframe level" arr={lv} set={setLv} opts={[["Output",i=>i.lvs.includes("Output")],["Outcome",i=>i.lvs.includes("Outcome")],["Impact",i=>i.lvs.includes("Impact")],["Process",i=>i.lvs.includes("Process")]]}/>
             <Facet k="d" label="Donor requirement" arr={dn} set={setDn} opts={[["ECHO",i=>i.donor.includes("ECHO")],["INTPA",i=>i.donor.includes("INTPA")]]}/>
             <Facet k="s" label="SDG alignment" arr={sdg} set={setSdg} opts={[["SDG indicator",i=>i.sdg]]}/>
             </div>
@@ -304,13 +314,14 @@ function NutritionPage(){
             {active.map(([l,rm])=><button key={l} onClick={rm} style={{display:"inline-flex",alignItems:"center",gap:6,height:30,padding:"0 10px",background:"#FFF4EC",border:"1px solid #FFD9BD",font:"500 14px Ubuntu,sans-serif",color:"#1A1A1A",cursor:"pointer"}}>{l}<span aria-hidden="true" style={{fontSize:16,lineHeight:1}}>×</span></button>)}
             {any&&<button onClick={clear} style={{background:"none",border:0,color:OT,font:"700 14px Ubuntu,sans-serif",textTransform:"uppercase",cursor:"pointer",textDecoration:"underline",textUnderlineOffset:3}}>Clear filters</button>}
           </div>
-          {res.length===0&&<p className="ik-p" style={{padding:"24px 0"}}>No indicator matches all of these filters. Try removing one, or <button onClick={clear} style={{background:"none",border:0,padding:0,color:OT,font:"inherit",textDecoration:"underline",cursor:"pointer"}}>clear all filters</button>.</p>}
+          {res.length===0&&<p className="ik-p" style={{padding:"24px 0"}}>No indicator matches all of these filters. Try removing one, or <button onClick={clear} style={{background:"none",border:0,padding:0,color:OT,font:"inherit",textDecoration:"underline",cursor:"pointer"}}>clear all filters</button>. Still nothing? <a href="IndiKit Contact prototype.html?topic=request" style={{textDecoration:"underline",textUnderlineOffset:3}}>Request an indicator</a>.</p>}
           {GROUPS.map(([g])=>{const it=res.filter(i=>i.g===g);if(!it.length)return null;const cap=any||more[g]?it.length:6;return (
             <div key={g} style={{marginTop:28}}>
-              <h2 style={{fontSize:20,fontWeight:700,margin:"0 0 4px",display:"flex",alignItems:"baseline",gap:10}}>{g}<span style={{fontSize:14,fontWeight:400,color:"#1A1A1A"}}>{it.length}</span></h2>
+              <h2 style={{fontSize:22,fontWeight:700,margin:"0 0 4px",display:"flex",alignItems:"baseline",gap:10}}>{g}<span style={{fontSize:14,fontWeight:400,color:"#1A1A1A"}}>{it.length}</span></h2>
               <ul style={{listStyle:"none",margin:0,padding:0}}>{it.slice(0,cap).map(i=><li key={i.n}><a className="nf-row" href="#">{i.n}<span style={{display:"flex",gap:6,flex:"none"}}><span className="nf-tag">{i.lv}</span>{i.donor.map(d=><span key={d} className="nf-tag">{d}</span>)}{i.sdg&&<span className="nf-tag">SDG</span>}</span></a></li>)}</ul>
               {cap<it.length&&<button onClick={()=>setMore({...more,[g]:true})} style={{marginTop:12,background:"none",border:0,padding:0,color:OT,font:"700 15px Ubuntu,sans-serif",textTransform:"uppercase",cursor:"pointer"}}>Show all {it.length}</button>}
             </div>);})}
+          <p className="ik-p" style={{marginTop:28,fontSize:16}}>Can’t find the indicator you need? <a href="IndiKit Contact prototype.html?topic=request" style={{textDecoration:"underline",textUnderlineOffset:3}}>Request an indicator</a></p>
           <div style={{marginTop:40,border:"1px solid "+RULE,padding:"24px 26px"}}>
             <div className="ik-eye" style={{marginBottom:6}}>Planning data collection?</div>
             <h2 className="ik-h2" style={{fontSize:22,marginBottom:16}}>Measure these indicators well</h2>
